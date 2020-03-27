@@ -14,6 +14,7 @@ async function sendToUser(token: string, title: string, message: string) {
         notification: {
             title: title,
             body: message,
+            sound: "default"
         },
         data: {
             click_action: "FLUTTER_NOTIFICATION_CLICK",
@@ -30,10 +31,11 @@ async function getUserToken(uid: string): Promise<string> {
     return result;
 }
 
-export const NewOfferNotification = functions.region('europe-west1').firestore.document('ProductRequests/{doc}/offers/{offer}').onUpdate(async (change, _context) => {
+export const NewOfferNotification = functions.region('europe-west1').firestore.document('ProductRequests/{doc}/offers/{offer}').onWrite(async (change, _context) => {
     let { doc, offer } = _context.params;
 
     const newData = change.after.data()
+
     if (newData) {
         let uid: string;
         let productName: string;
@@ -49,6 +51,27 @@ export const NewOfferNotification = functions.region('europe-west1').firestore.d
             'عرض جديد',
             'عرض جديد على طلبك ' + productName,
         ).catch((e) => console.log(e));
+    }
+    return null;
+});
+
+export const NewOrderNotification = functions.region('europe-west1').firestore.document('Orders/{doc}').onWrite(async (change, _context) => {
+    let { doc } = _context.params;
+    const newData = change.after.data()
+
+    if (newData) {
+        let products = newData.products;
+        for (let p of products) {
+            let token = await getUserToken(p.sellerUid);
+            let productName: string = p.productName;
+            await sendToUser(
+                token,
+                'فاتورة مبيعات جديدة',
+                'تم بيع المنتج ' + productName,
+            ).catch((e) => console.log(e));
+        }
+
+
     }
     return null;
 });
