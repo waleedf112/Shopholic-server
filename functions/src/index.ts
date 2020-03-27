@@ -9,8 +9,17 @@ admin.initializeApp({
     databaseURL: "https://shopholic-app.firebaseio.com"
 });
 
-async function sendToUser(token: string, payload: object) {
-    await admin.messaging().sendToDevice(token, payload);
+async function sendToUser(token: string, title: string, message: string) {
+    let payload = {
+        notification: {
+            title: title,
+            body: message,
+        },
+        data: {
+            click_action: "FLUTTER_NOTIFICATION_CLICK",
+        },
+    };
+    await admin.messaging().sendToDevice(token, payload).catch((e) => console.log(e));
 }
 
 async function getUserToken(uid: string): Promise<string> {
@@ -22,19 +31,24 @@ async function getUserToken(uid: string): Promise<string> {
 }
 
 export const NewOfferNotification = functions.region('europe-west1').firestore.document('ProductRequests/{doc}/offers/{offer}').onUpdate(async (change, _context) => {
+    let { doc, offer } = _context.params;
+
     const newData = change.after.data()
     if (newData) {
-        let token = await getUserToken(newData.traderUid);
-        let payload = {
-            notification: {
-                title: 'test',
-                body: 'test test test',
-            },
-            data: {
-                click_action: "FLUTTER_NOTIFICATION_CLICK",
-            },
-        };
-        await sendToUser(token, payload).catch((e) => console.log(e));
+        let uid: string;
+        let productName: string;
+        await admin.firestore().collection('ProductRequests').doc(doc).get().then((snapshot) => {
+            uid = snapshot.data().uid;
+            productName = snapshot.data().productName;
+        });
+        let token = await getUserToken(uid);
+
+        console.log(token)
+        await sendToUser(
+            token,
+            'عرض جديد',
+            'عرض جديد على طلبك ' + productName,
+        ).catch((e) => console.log(e));
     }
     return null;
 });
