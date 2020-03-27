@@ -1,0 +1,12 @@
+{
+    "type": "service_account",
+    "project_id": "shopholic-app",
+    "private_key_id": "823799f723be7d56837920fece1a1b5cda1ea97c",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCwdHMBxAhTDkp1\neJ5RQjSNGOQkDjEPLMCrdjfY0RJ3a0ino/AKzl73/IH38eeQouKmx+TCoL7PRt6a\nWtdFoBBCoeBMeMJx0/cm245MiwQ392qISsujjTofSMF3ZeyFPjX0mh9fzBiw+8Vo\nyzy4sBLEtn7jrs6Or8qXMEShYk8mBMtOvHKGTxMXyJUus56FBUKXHJ0bkPPqOXhU\nUs7iHJSapCP7JDLQjv0PcX0rCiJtPm8LFxs8W0nj7Rq2UvnK7YGKgbt1++kpwayV\n5ODwllp8febfTwVbMWy6Avx+qTVdcwkOOylTmkG7sSOfC5avXRaOIaTcCvfe0Tdg\n9mFCDpnRAgMBAAECggEADX8es9Yfb+DiM5mB/IOkmt06SAK44GkDJKpCa8hUEgPH\n9yCcMetmiq/K7iDX3jGDRg/4kKV0aszIJoTHvfjX/Yy9qAO9lbDJkPSOrg6dCD3Z\nrWqRKGWbOjzZpW0LmgZv4JFwUGa/RbxANXuEHblD+j1eN8KNZI8QHx/PRAvNs4He\nV2NAa21cn5Po03mM5jlTGO7iRHBmKYKPHcO3mwbuNwJXa4iGFzZMCGTu1CUvt6xs\n/fBfgvc+pnY2AxiOmx8ddugOC4I8XZYNzxOKn4Y2/ZBHP6Z++7ak3deNA4P2uRQa\nWunqTmn0+Uvc8EdXfOF1v2gZsmMibpaqIFXlSeA+9QKBgQDalrXAkYe1HYp5/sFu\nTfgqaD98+d32hjP1Frgk+dRgpxCnqQH2L0+9glU3Evlapt9TY58k5/GEUcxJUTcn\nEwu8LjjdEMM1IsTZHBZO9fmWlj4Vx3S7YaD/hY5bhAikevowSUAwykcAzimYygU7\nmBqgfb/mXzCCF5UH7THZlvg4NQKBgQDOp63X9KmKLnWzV8Lg7ZAmDFDnOTIPGpJo\nX8qF0GezXGGU0LAADJArJt7Z3EMXUr4DQzMzBYkcIuR+PNlymIoRJZ0MBeKre3GN\nKKoo+eSU0wvMjTYXwzgshpe/JSTZmxkh85sj06gWFIRM1sW9K/iYUCZyYbFe85JN\ntgeUBq3mrQKBgBb3muU+5Ulsby5eTCiw3JBoH7Ob9Wx/sVnhJzwLW/tD0oYrRd9+\nHRzGYvnEbprNyc1TPFd+X2wNxC8371mVsLf3C1Z++mPM4W4Ge3mUcsMVyjQzntpJ\naccvW0PWXaoamcsVBz+ZIVi+ULSTFXWrh7CxRcaI3entXGVW0NQR/sa5AoGABjPU\nLOoj+IjCcZqNt9CJhgrSls4JqZhjkoxleLSzmBeKuju1PJsj7JejEqjgvp92IoTu\n0XY2Ekkd0IglAqJ/alpVp1m53um6k8EHsmklqi3XadFHMVljozp67XrA62MTUwiL\nvHyKy/bbra64ip/6OyAUt1QlTbNDzd9LxO6aY5UCgYEAk8+7pmDO50otumEcMYkl\nRj83x4RXcDIMrNQ+4yu/qPQNyZDqt2ArurU6rmfnAXOQsWU7eXycAE4/LzoXt7bG\n1wEus+PwJ4ceuV50fGDhD3f093XuFuKh9YEWS9T4WYkxno1vwON57vo5+ZYutLoR\n5AazyQKAmX3PwA0NzJydNx4=\n-----END PRIVATE KEY-----\n",
+    "client_email": "firebase-adminsdk-u6ize@shopholic-app.iam.gserviceaccount.com",
+    "client_id": "106255373295991679792",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-u6ize%40shopholic-app.iam.gserviceaccount.com"
+}
