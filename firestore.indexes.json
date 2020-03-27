@@ -1,0 +1,65 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "ProductRequests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "acceptedTrade",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "uid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Time",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "ProductRequests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "acceptedTrader",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Time",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "ProductRequests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "acceptedTrader",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Time",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "ProductRequests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "uid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Time",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
