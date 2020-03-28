@@ -44,8 +44,6 @@ export const NewOfferNotification = functions.region('europe-west1').firestore.d
             productName = snapshot.data().productName;
         });
         let token = await getUserToken(uid);
-
-        console.log(token)
         await sendToUser(
             token,
             'عرض جديد',
@@ -55,9 +53,9 @@ export const NewOfferNotification = functions.region('europe-west1').firestore.d
     return null;
 });
 
-export const NewOrderNotification = functions.region('europe-west1').firestore.document('Orders/{doc}').onWrite(async (change, _context) => {
+export const NewOrderNotification = functions.region('europe-west1').firestore.document('Orders/{doc}').onCreate(async (change, _context) => {
     let { doc } = _context.params;
-    const newData = change.after.data()
+    const newData = change.data()
 
     if (newData) {
         let products = newData.products;
@@ -122,5 +120,70 @@ export const ChatsNotification = functions.region('europe-west1').firestore.docu
             ).catch((e) => console.log(e));
         }
     }
+    return null;
+});
+
+export const UpdateTracking = functions.region('europe-west1').pubsub.schedule('every 10 minutes').onRun(async (_context) => {
+    function switchStatus(status: string): string {
+        var d = Math.random();
+
+        if (status == 'تم اضافة الطلب') {
+            if (d < 0.5) return 'تم الغاء الطلب';
+            else return 'تم شحن طلبك';
+        }
+        if (status == 'تم شحن طلبك') {
+            if (d < 0.5) return 'طلبك متأخر عن الموعد المعتاد!';
+            else return 'الشحنة في طريقها اليك!';
+        }
+        if (status == 'الشحنة في طريقها اليك!' || status == 'طلبك متأخر عن الموعد المعتاد!') {
+            if (d < 0.5) return 'تم ارجاع شحنتك';
+            else return 'تم توصيل الطلب';
+        }
+        return '';
+    }
+    function getStatusIcon(status: string): number {
+        if (status == 'تم اضافة الطلب') return 0;
+        if (status == 'تم الغاء الطلب') return 2;
+        if (status == 'تم شحن طلبك') return 0;
+        if (status == 'طلبك متأخر عن الموعد المعتاد!') return 1;
+        if (status == 'الشحنة في طريقها اليك!') return 0;
+        if (status == 'تم ارجاع شحنتك') return 3;
+        if (status == 'تم توصيل الطلب') return 2;
+        return 99;
+    }
+    await admin.firestore().collection('Orders').listDocuments().then(async (snapshot) => {
+        let documents = snapshot;
+        for (let doc of documents) {
+            let docStatus;
+            let docIcon;
+            let cancel: boolean = false;
+            let token: string;
+            let orderId: string;
+            await doc.get().then(async (value) => {
+                if (value.data().statusMessage !== 'تم توصيل الطلب' && value.data().statusMessage !== 'تم ارجاع شحنتك' && value.data().statusMessage !== 'تم الغاء الطلب') {
+                    token = await getUserToken(value.data().uid);
+                    orderId = value.data().number;
+                    docStatus = switchStatus(value.data().statusMessage);
+                    docIcon = getStatusIcon(docStatus);
+                } else {
+                    cancel = true;
+                }
+
+            });
+            if (!cancel) {
+                await doc.update({
+                    statusIconIndex: docIcon,
+                    statusMessage: docStatus,
+                }).catch((e) => console.log(e));
+
+                await sendToUser(
+                    token,
+                    'تحديث على طلبك رقم ' + orderId,
+                    docStatus,
+                ).catch((e) => console.log(e));
+            }
+
+        }
+    });
     return null;
 });
