@@ -187,3 +187,4 @@ export const UpdateTracking = functions.region('europe-west1').pubsub.schedule('
     });
     return null;
 });
+
