@@ -123,7 +123,7 @@ export const ChatsNotification = functions.region('europe-west1').firestore.docu
     return null;
 });
 
-export const UpdateTracking = functions.region('europe-west1').pubsub.schedule('every 10 minutes').onRun(async (_context) => {
+export const UpdateTracking = functions.region('europe-west1').pubsub.schedule('every 3 minutes').onRun(async (_context) => {
     function switchStatus(status: number): number {
         var d = Math.random();
 
@@ -160,7 +160,7 @@ export const UpdateTracking = functions.region('europe-west1').pubsub.schedule('
             let token: string;
             let orderId: string;
             await doc.get().then(async (value) => {
-                if (value.data().statusMessage !== 0 && value.data().statusMessage !== 5 && value.data().statusMessage !== 1) {
+                if (value.data().statusMessage != 6 && value.data().statusMessage != 5 && value.data().statusMessage != 1) {
                     token = await getUserToken(value.data().uid);
                     orderId = value.data().number;
                     docStatus = switchStatus(value.data().statusMessage);
@@ -204,3 +204,20 @@ export const UpdateProductOffer = functions.region('europe-west1').pubsub.schedu
     return null;
 });
 
+export const SendGlobalNofitication = functions.https.onRequest(async (req, res) => {
+    const head = req.query.head;
+    const body = req.query.body;
+    let payload = {
+        notification: {
+            title: head,
+            body: body,
+            sound: "default"
+        },
+        data: {
+            click_action: "FLUTTER_NOTIFICATION_CLICK",
+        },
+    };
+    await admin.messaging().sendToTopic('main', payload).catch((e) => console.log(e));
+    res.send(body);
+    return null;
+});
