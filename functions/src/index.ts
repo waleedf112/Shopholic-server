@@ -124,31 +124,31 @@ export const ChatsNotification = functions.region('europe-west1').firestore.docu
 });
 
 export const UpdateTracking = functions.region('europe-west1').pubsub.schedule('every 10 minutes').onRun(async (_context) => {
-    function switchStatus(status: string): string {
+    function switchStatus(status: number): number {
         var d = Math.random();
 
-        if (status == 'تم اضافة الطلب') {
-            if (d < 0.5) return 'تم الغاء الطلب';
-            else return 'تم شحن طلبك';
+        if (status == 0) {
+            if (d < 0.5) return 1;
+            else return 2;
         }
-        if (status == 'تم شحن طلبك') {
-            if (d < 0.5) return 'طلبك متأخر عن الموعد المعتاد!';
-            else return 'الشحنة في طريقها اليك!';
+        if (status == 2) {
+            if (d < 0.5) return 3;
+            else return 4;
         }
-        if (status == 'الشحنة في طريقها اليك!' || status == 'طلبك متأخر عن الموعد المعتاد!') {
-            if (d < 0.5) return 'تم ارجاع شحنتك';
-            else return 'تم توصيل الطلب';
+        if (status == 4 || status == 3) {
+            if (d < 0.5) return 5;
+            else return 6;
         }
-        return '';
+        return -99;
     }
-    function getStatusIcon(status: string): number {
-        if (status == 'تم اضافة الطلب') return 0;
-        if (status == 'تم الغاء الطلب') return 2;
-        if (status == 'تم شحن طلبك') return 0;
-        if (status == 'طلبك متأخر عن الموعد المعتاد!') return 1;
-        if (status == 'الشحنة في طريقها اليك!') return 0;
-        if (status == 'تم ارجاع شحنتك') return 3;
-        if (status == 'تم توصيل الطلب') return 2;
+    function getStatusIcon(status: number): number {
+        if (status == 0) return 0;
+        if (status == 1) return 2;
+        if (status == 2) return 0;
+        if (status == 3) return 1;
+        if (status == 4) return 0;
+        if (status == 5) return 3;
+        if (status == 6) return 0;
         return 99;
     }
     await admin.firestore().collection('Orders').listDocuments().then(async (snapshot) => {
@@ -160,7 +160,7 @@ export const UpdateTracking = functions.region('europe-west1').pubsub.schedule('
             let token: string;
             let orderId: string;
             await doc.get().then(async (value) => {
-                if (value.data().statusMessage !== 'تم توصيل الطلب' && value.data().statusMessage !== 'تم ارجاع شحنتك' && value.data().statusMessage !== 'تم الغاء الطلب') {
+                if (value.data().statusMessage !== 0 && value.data().statusMessage !== 5 && value.data().statusMessage !== 1) {
                     token = await getUserToken(value.data().uid);
                     orderId = value.data().number;
                     docStatus = switchStatus(value.data().statusMessage);
@@ -182,6 +182,22 @@ export const UpdateTracking = functions.region('europe-west1').pubsub.schedule('
                     docStatus,
                 ).catch((e) => console.log(e));
             }
+
+        }
+    });
+    return null;
+});
+
+
+export const UpdateProductOffer = functions.region('europe-west1').pubsub.schedule('every 2 minutes').onRun(async (_context) => {
+
+    await admin.firestore().collection('ProductOffer').listDocuments().then(async (snapshot) => {
+        let documents = snapshot;
+        for (let doc of documents) {
+
+            await doc.update({
+                deleted: false,
+            }).catch((e) => console.log(e));
 
         }
     });
