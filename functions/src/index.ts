@@ -54,7 +54,6 @@ export const NewOfferNotification = functions.region('europe-west1').firestore.d
 });
 
 export const NewOrderNotification = functions.region('europe-west1').firestore.document('Orders/{doc}').onCreate(async (change, _context) => {
-    let { doc } = _context.params;
     const newData = change.data()
 
     if (newData) {
@@ -68,14 +67,11 @@ export const NewOrderNotification = functions.region('europe-west1').firestore.d
                 'تم بيع المنتج ' + productName,
             ).catch((e) => console.log(e));
         }
-
-
     }
     return null;
 });
 
 export const RoleAcceptedNotification = functions.region('europe-west1').firestore.document('Users/{doc}').onUpdate(async (change, _context) => {
-    let { doc } = _context.params;
     const newData = change.after.data()
     const oldData = change.before.data()
 
@@ -96,7 +92,6 @@ export const RoleAcceptedNotification = functions.region('europe-west1').firesto
 });
 
 export const ChatsNotification = functions.region('europe-west1').firestore.document('Chats/{doc}').onWrite(async (change, _context) => {
-    let { doc } = _context.params;
     const newData = change.after.data()
 
     if (newData) {
@@ -124,9 +119,9 @@ export const ChatsNotification = functions.region('europe-west1').firestore.docu
 });
 
 export const UpdateTracking = functions.region('europe-west1').pubsub.schedule('every 3 minutes').onRun(async (_context) => {
+
     function switchStatus(status: number): number {
         var d = Math.random();
-
         if (status == 0) {
             if (d < 0.5) return 1;
             else return 2;
@@ -141,6 +136,7 @@ export const UpdateTracking = functions.region('europe-west1').pubsub.schedule('
         }
         return -99;
     }
+
     function getStatusIcon(status: number): number {
         if (status == 0) return 0;
         if (status == 1) return 2;
@@ -151,6 +147,7 @@ export const UpdateTracking = functions.region('europe-west1').pubsub.schedule('
         if (status == 6) return 0;
         return 99;
     }
+
     await admin.firestore().collection('Orders').listDocuments().then(async (snapshot) => {
         let documents = snapshot;
         for (let doc of documents) {
@@ -168,37 +165,31 @@ export const UpdateTracking = functions.region('europe-west1').pubsub.schedule('
                 } else {
                     cancel = true;
                 }
-
             });
             if (!cancel) {
                 await doc.update({
                     statusIconIndex: docIcon,
                     statusMessage: docStatus,
                 }).catch((e) => console.log(e));
-
                 await sendToUser(
                     token,
                     'تحديث على طلبك رقم ' + orderId,
                     docStatus,
                 ).catch((e) => console.log(e));
             }
-
         }
     });
     return null;
 });
-
 
 export const UpdateProductOffer = functions.region('europe-west1').pubsub.schedule('every 2 minutes').onRun(async (_context) => {
 
     await admin.firestore().collection('ProductOffer').listDocuments().then(async (snapshot) => {
         let documents = snapshot;
         for (let doc of documents) {
-
             await doc.update({
                 deleted: false,
             }).catch((e) => console.log(e));
-
         }
     });
     return null;
