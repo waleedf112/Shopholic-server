@@ -31,7 +31,7 @@ async function getUserToken(uid: string): Promise<string> {
     return result;
 }
 
-export const NewOfferNotification = functions.region('europe-west1').firestore.document('ProductRequests/{doc}/offers/{offer}').onWrite(async (change, _context) => {
+export const NewOfferNotification = functions.firestore.document('ProductRequests/{doc}/offers/{offer}').onWrite(async (change, _context) => {
     let { doc, offer } = _context.params;
 
     const newData = change.after.data()
@@ -53,7 +53,7 @@ export const NewOfferNotification = functions.region('europe-west1').firestore.d
     return null;
 });
 
-export const NewOrderNotification = functions.region('europe-west1').firestore.document('Orders/{doc}').onCreate(async (change, _context) => {
+export const NewOrderNotification = functions.firestore.document('Orders/{doc}').onCreate(async (change, _context) => {
     const newData = change.data()
 
     if (newData) {
@@ -71,7 +71,7 @@ export const NewOrderNotification = functions.region('europe-west1').firestore.d
     return null;
 });
 
-export const RoleAcceptedNotification = functions.region('europe-west1').firestore.document('Users/{doc}').onUpdate(async (change, _context) => {
+export const RoleAcceptedNotification = functions.firestore.document('Users/{doc}').onUpdate(async (change, _context) => {
     const newData = change.after.data()
     const oldData = change.before.data()
 
@@ -91,7 +91,7 @@ export const RoleAcceptedNotification = functions.region('europe-west1').firesto
     return null;
 });
 
-export const ChatsNotification = functions.region('europe-west1').firestore.document('Chats/{doc}').onWrite(async (change, _context) => {
+export const ChatsNotification = functions.firestore.document('Chats/{doc}').onWrite(async (change, _context) => {
     const newData = change.after.data()
 
     if (newData) {
@@ -118,7 +118,7 @@ export const ChatsNotification = functions.region('europe-west1').firestore.docu
     return null;
 });
 
-export const UpdateTracking = functions.region('europe-west1').pubsub.schedule('every 3 minutes').onRun(async (_context) => {
+export const UpdateTracking = functions.pubsub.schedule('every 3 minutes').onRun(async (_context) => {
 
     function switchStatus(status: number): number {
         var d = Math.random();
@@ -177,19 +177,6 @@ export const UpdateTracking = functions.region('europe-west1').pubsub.schedule('
                     docStatus,
                 ).catch((e) => console.log(e));
             }
-        }
-    });
-    return null;
-});
-
-export const UpdateProductOffer = functions.region('europe-west1').pubsub.schedule('every 2 minutes').onRun(async (_context) => {
-
-    await admin.firestore().collection('ProductOffer').listDocuments().then(async (snapshot) => {
-        let documents = snapshot;
-        for (let doc of documents) {
-            await doc.update({
-                deleted: false,
-            }).catch((e) => console.log(e));
         }
     });
     return null;
