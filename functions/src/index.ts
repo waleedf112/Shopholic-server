@@ -32,7 +32,7 @@ async function getUserToken(uid: string): Promise<string> {
 }
 
 export const NewOfferNotification = functions.firestore.document('ProductRequests/{doc}/offers/{offer}').onWrite(async (change, _context) => {
-    let { doc, offer } = _context.params;
+    let { doc } = _context.params;
 
     const newData = change.after.data()
 
